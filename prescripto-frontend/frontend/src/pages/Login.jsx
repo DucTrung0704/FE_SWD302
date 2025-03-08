@@ -1,16 +1,28 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { useContext } from 'react'
+import { UserContext } from '../context/UserContext'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
 
+  const navigate = useNavigate()
+  const { loginUser } = useContext(UserContext)
+  console.log("loginUser:", loginUser);
   const [state, setState] = useState('Sign Up')
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const onSubmitHandler = (event) => {
+  const onSubmitHandler = async (event) => {
     event.preventDefault();
 
+    const result = await loginUser(email, password);
+    if (result) {
+      navigate('/my-profile-doctor');
+    } else {
+      navigate('/login');
+    }
   }
 
   return (
@@ -26,8 +38,8 @@ const Login = () => {
           : null
         }
         <div className='w-full '>
-          <p>Email</p>
-          <input onChange={(e) => setEmail(e.target.value)} value={email} className='border border-zinc-300 rounded w-full p-2 mt-1' type="email" required />
+          <p>UserName</p>
+          <input onChange={(e) => setEmail(e.target.value)} value={email} className='border border-zinc-300 rounded w-full p-2 mt-1' required />
         </div>
         <div className='w-full '>
           <p>Password</p>
